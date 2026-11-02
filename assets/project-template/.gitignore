@@ -1,0 +1,22 @@
+# 构建产物
+/target/
+/dist/
+/build/
+# Python
+__pycache__/
+*.pyc
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+# Node
+node_modules/
+# 真实配置和密钥（仓库里只放 config.example.*）
+/config/*
+!/config/*.example.*
+.env
+*.pem
+*.key
+# 日志和临时文件
+*.log
+*.tmp

@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: bootstrap-new-device-service
+expected_outcome: |
+  在当前目录下创建 fan-controller/，骨架完整：README.md、CHANGELOG.md（含 [Unreleased]）、
+  CLAUDE.md（第一行 @ENGINEERING_STANDARD.md）、AGENTS.md 指向 CLAUDE.md、ENGINEERING_STANDARD.md 副本、
+  quality-budget.toml、docs/adr/0001-language.md（选 Rust，理由提到 Linux 单板常驻服务、无 GC、内存小、交叉编译）、
+  docs/architecture.md、docs/runbook.md、docs/pitfalls.md、scripts/ci.sh 等脚本、.gitignore，并已 git init。
+  跑过 scripts/audit_project.py 且报告 blocker 为 0。没有写风扇业务逻辑。
+  汇报用变更说明模板，明确写出没在设备上验证。

@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: review-diff-against-standard
+context:
+  scaffold_script: place-files.sh
+expected_outcome: |
+  输出按严重度排序的表格（严重度 | 文件:行号 | 问题 | 条款 | 建议），最后一行写 blocker/should/nit 各几条。
+  blocker 至少包括：对串口输入 parts[1] 索引和 unwrap() 会 panic（第 4、6 节）；
+  `let _ = state.save(...)` 吞错误（第 6 节）；新行为没有测试（第 8 节）；
+  变更说明的"怎么验证的"只有 cargo build、不是真实测试输出（第 31 节）；feat 没更新 CHANGELOG（第 10 节）。
+  should 至少包括：主循环里每次读数打 info（第 7 节）；read_line 没有超时（第 6 节）；
+  状态文件写入不是原子写（第 19 节）；变更等级应为 M 而不是 S（新增持久化状态文件，第 16 节）。
+  不复述改动，不表扬。

@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: audit-messy-python-project
+context:
+  scaffold_script: place-files.sh
+expected_outcome: |
+  输出一份按严重度（blocker / should / nit）分组的差距清单，每条带条款号和位置。
+  至少指出：硬编码密码是 blocker（第 11 节）；没有任何测试是 blocker（第 8 节）；
+  缺 README / CHANGELOG / CLAUDE.md / ci.sh / 标准副本；bare except 吞错误（第 6 节）；
+  print 代替结构化日志（第 7 节）；无日期的 TODO（第 4 节）；requirements.txt 未固定版本（第 21 节）；
+  不是 git 仓库（第 9 节）。没有修改任何文件。

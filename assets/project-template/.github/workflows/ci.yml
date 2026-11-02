@@ -1,0 +1,30 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Rust 工具链（按 rust-toolchain.toml 自动安装）
+        if: hashFiles('Cargo.toml') != ''
+        run: |
+          rustup show
+          rustup component add rustfmt clippy
+          cargo install cargo-deny cargo-audit --locked
+      - name: Python
+        if: hashFiles('pyproject.toml') != ''
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-version"
+      - name: Python 工具
+        if: hashFiles('pyproject.toml') != ''
+        run: pip install ruff mypy pytest pip-audit
+      - name: shellcheck
+        run: sudo apt-get update -q && sudo apt-get install -y -q shellcheck
+      - name: 全部检查
+        run: STRICT=1 scripts/ci.sh

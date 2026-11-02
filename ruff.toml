@@ -1,0 +1,14 @@
+# 本仓库的 ruff 配置，和 references/quality-gates.md 推荐的一致。
+line-length = 120
+target-version = "py311"
+
+[lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4", "C90", "PL", "RUF"]
+ignore = ["RUF001", "RUF002", "RUF003"]   # 中文标点会被当成易混淆字符误报
+
+[lint.mccabe]
+max-complexity = 10
+
+[lint.pylint]
+max-args = 5
+max-statements = 50

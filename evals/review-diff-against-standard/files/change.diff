@@ -1,0 +1,29 @@
+diff --git a/src/sensor.rs b/src/sensor.rs
+index 3b1f2c4..9d8e7a1 100644
+--- a/src/sensor.rs
++++ b/src/sensor.rs
+@@ -10,6 +10,25 @@ pub struct Reading {
+     pub temp_c: f32,
+ }
+ 
++/// 从串口一行文本解析读数，格式 "<id>,<温度>"
++pub fn parse_line(line: &str) -> Reading {
++    let parts: Vec<&str> = line.split(',').collect();
++    let temp_c = parts[1].trim().parse::<f32>().unwrap();
++    Reading { temp_c }
++}
++
++/// 主循环：读串口、更新状态、落盘
++pub fn run(port: &mut dyn SerialPort, state: &mut State) {
++    loop {
++        let line = port.read_line();
++        let r = parse_line(&line);
++        tracing::info!(temp = r.temp_c, "reading");
++        state.last = Some(r);
++        let _ = state.save("/var/lib/app/state.json");
++    }
++}
++
+ impl State {
+     pub fn save(&self, path: &str) -> std::io::Result<()> {
+         std::fs::write(path, serde_json::to_vec(self).unwrap())

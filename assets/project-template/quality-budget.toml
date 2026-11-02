@@ -1,0 +1,46 @@
+# 质量预算：CI 读取并强制。只能变严；变松需要 ADR。说明见 skill 的 references/quality-gates.md。
+version = 1
+
+# 项目等级（标准第 0 节）：0 脚本/实验 · 1 工具/内部 · 2 产品/设备常驻 · 3 安全/运动/金钱。
+# 决定多少条规则生效。只能在 ADR 里降级；不确定选高一级。
+[project]
+tier = 2
+
+[code]
+warnings = 0
+max_function_lines = 50
+max_file_lines = 500
+max_args = 5
+max_cyclomatic_complexity = 10
+max_pr_diff_lines = 400
+max_duplication_percent = 3
+
+[tests]
+pass_rate = 100
+core_line_coverage_min = 80
+total_line_coverage_min = 60
+mutation_kill_rate_min = 70
+flaky_allowed = 0
+
+[deps]
+high_vulns = 0
+license_allow = ["MIT", "Apache-2.0", "BSD-2-Clause", "BSD-3-Clause", "ISC", "MPL-2.0"]
+
+[todo]
+overdue_allowed = 0
+
+# 设备 / 常驻程序资源预算。0 = 未设置。实测两次取较差值 × 1.2 后填入，测法见 quality-gates.md。
+[resources]
+binary_size_mb_max = 0
+startup_to_ready_s_max = 0
+idle_cpu_percent_max = 0
+idle_rss_mb_max = 0
+peak_rss_mb_max = 0
+daily_disk_write_mb_max = 0
+
+# 例外：对某条规则、某个路径的临时豁免。必须有原因和到期日（≤ 90 天）；到期后审计报 blocker。
+# [[exceptions]]
+# rule = "code.max_file_lines"
+# path = "src/legacy/parser.rs"
+# reason = "旧解析器等重写，见 ADR-0007"
+# expires = "2027-01-31"

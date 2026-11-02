@@ -1,0 +1,32 @@
+# 本仓库自己的质量预算（等级 1：工具）。说明见 references/quality-gates.md。
+version = 1
+
+[project]
+tier = 1
+
+[audit]
+# 模板和测试夹具不是本仓库的"源码"，整体跳过；夹具里的密码是故意的测试数据。
+skip_paths = ["assets/project-template", "evals"]
+
+[code]
+warnings = 0
+max_function_lines = 50
+max_file_lines = 500
+max_args = 5
+max_cyclomatic_complexity = 10
+max_pr_diff_lines = 400
+max_duplication_percent = 3
+
+[tests]
+pass_rate = 100
+core_line_coverage_min = 80
+total_line_coverage_min = 60
+mutation_kill_rate_min = 70
+flaky_allowed = 0
+
+[deps]
+high_vulns = 0
+license_allow = ["MIT", "Apache-2.0", "BSD-2-Clause", "BSD-3-Clause", "ISC", "MPL-2.0"]
+
+[todo]
+overdue_allowed = 0
