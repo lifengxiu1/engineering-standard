@@ -52,7 +52,7 @@ if need gitleaks "https://github.com/gitleaks/gitleaks/releases"; then
   step "密钥扫描"; run gitleaks detect --source . --no-banner
 fi
 
-# ---------- 标准审计（骨架、锁文件、CHANGELOG、TODO、文件长度、密钥痕迹）----------
+# ---------- 标准审计（骨架、锁文件、CHANGELOG、待办标记、文件长度、密钥痕迹）----------
 step "标准审计"
 run python3 scripts/audit_project.py .
 

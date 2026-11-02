@@ -15,7 +15,8 @@ from pathlib import Path
 SOURCE_EXT = {".rs", ".py", ".go", ".ts", ".tsx", ".js", ".c", ".cc", ".cpp", ".h", ".hpp", ".sh", ".kt", ".java"}
 UPGRADE_WORDS = ("升级", "upgrade", "触发")
 
-TODO_RE = re.compile(r"\b(TODO|FIXME|XXX)\b(?:\((\d{4}-\d{2}-\d{2})[^)]*\))?")
+# 只认 TODO: / TODO(...): 这种标记写法，注释里提到“TODO”这个词不算
+TODO_RE = re.compile(r"\b(TODO|FIXME|XXX)(?:\((\d{4}-\d{2}-\d{2})?[^)]*\))?\s*:")
 SHORTCUT_RE = re.compile(r"\bshortcut:\s*(.+)$")
 STANDARD_VERSION_RE = re.compile(r"^版本\s+(\d+\.\d+)")
 SECRET_PATTERNS = [

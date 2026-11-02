@@ -36,7 +36,7 @@ class SecretHitsTest(unittest.TestCase):
 
 class TodoStatesTest(unittest.TestCase):
     def test_classifies_overdue_undated_and_ok(self) -> None:
-        text = "// TODO(2026-01-01 x): old\n// TODO: none\n// FIXME(2027-01-01): later\n// TODO(bad-date): x\n"
+        text = "// TODO(2026-01-01 x): old\n// TODO: none\n// FIXME(2027-01-01): later\n// TODO(bad-date): x\n# 审计会查 TODO、文件长度\n"
         states = todo_states(text, TODAY)
         self.assertEqual({"overdue": [1], "undated": [2, 4], "ok": [3]}, states)
 
