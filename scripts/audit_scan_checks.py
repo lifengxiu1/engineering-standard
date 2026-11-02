@@ -16,6 +16,7 @@ from audit_source_checks import (
     STANDARD_NAME,
     Finding,
     is_test_file,
+    nonatomic_write_hits,
     secret_hits,
     shortcut_hits,
     sleep_hits,
@@ -246,6 +247,26 @@ def check_commits(a: Audit) -> None:
         )
 
 
+def check_nonatomic_writes(a: Audit) -> None:
+    """Rust 里直接覆盖写文件的调用台账（第 19 节：状态文件要 临时文件 → fsync → rename）。"""
+    hits: list[str] = []
+    for p, text in a._scannable_sources():
+        if p.suffix == ".rs" and not is_test_file(p, text):
+            hits += [f"{a.rel(p)}:{n}" for n in nonatomic_write_hits(text)]
+    if hits:
+        shown = ", ".join(hits[:SHOW_AT_MOST])
+        a.add(
+            Finding(
+                "nit",
+                "N-NONATOMIC-WRITE",
+                f"{len(hits)} 处直接覆盖写文件（fs::write / File::create）：{shown}",
+                "写的是状态或配置文件就改成 临时文件 → fsync → rename；日志、产物可忽略",
+                "§19",
+                hits[0],
+            )
+        )
+
+
 CHECKS = (
     check_tests,
     check_file_length,
@@ -256,4 +277,5 @@ CHECKS = (
     check_secrets,
     check_large_files,
     check_commits,
+    check_nonatomic_writes,
 )

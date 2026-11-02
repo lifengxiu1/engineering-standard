@@ -4,7 +4,12 @@
 
 ## [Unreleased]
 
+### Added
+- 审计新增两项 nit：requirements.txt 里声明了却没 import 的包（§21）、Rust 里直接覆盖写文件的调用台账（§19）
+
 ### Changed
+- 审计清单和审查发现设上限：最多 20 条，blocker 全列，should / nit 合并同类项，每条一两句（评测显示有 skill 的运行比基线慢 3–9 倍，产出过长是原因之一）
+- 评测断言：搭骨架用例在无 cargo 的机器上允许只剩 B-LOCK
 - 工作流 A：本机没有工具链时止步于骨架 + ADR + 预算 + README，空程序四件事留到有工具链的机器（评测发现有 skill 的运行在无 cargo 的机器上写了 566 行未编译代码）
 
 ### Fixed

@@ -41,6 +41,20 @@ SUPPRESSION_PATTERNS = [
 ]
 SLEEP_RE = re.compile(r"\b(?:time\.sleep|thread::sleep|tokio::time::sleep|asyncio\.sleep|time\.Sleep)\(\s*([^)]*)\)")
 ZERO_ARG_RE = re.compile(r"^(?:0|0\.0+|0_f64|Duration::ZERO)?$")
+IMPORT_RE = re.compile(r"^\s*(?:import\s+([\w.]+)|from\s+([\w.]+)\s+import\b)", re.M)
+REQ_NAME_RE = re.compile(r"^([A-Za-z0-9][A-Za-z0-9._-]*)")
+NONATOMIC_WRITE_RE = re.compile(r"\b(?:std::)?fs::write\(|\bFile::create\(")
+# 包名与 import 名不一致的常见情况（都已标准化为小写、下划线）
+IMPORT_ALIASES = {
+    "pyyaml": "yaml",
+    "scikit_learn": "sklearn",
+    "pillow": "pil",
+    "beautifulsoup4": "bs4",
+    "python_dateutil": "dateutil",
+    "opencv_python": "cv2",
+    "psycopg2_binary": "psycopg2",
+    "attrs": "attr",
+}
 TEST_NAME_RE = re.compile(r"^(?:test_.*\.py|.*_test\.(?:py|go)|.*\.(?:test|spec)\.[jt]sx?)$")
 
 STANDARD_NAME = "ENGINEERING_STANDARD.md"
@@ -187,6 +201,35 @@ def _parse_date(value: str) -> dt.date | None:
         return dt.date.fromisoformat(value)
     except ValueError:
         return None
+
+
+def python_imports(text: str) -> set[str]:
+    """源码里 import 的顶层模块名（小写）：import a.b → a；from a.b import c → a。"""
+    return {(m.group(1) or m.group(2)).split(".")[0].lower() for m in IMPORT_RE.finditer(text)}
+
+
+def requirement_names(text: str) -> list[str]:
+    """requirements.txt 里的包名，去掉版本、注释、选项行，标准化为小写下划线。"""
+    out: list[str] = []
+    for raw in text.splitlines():
+        ln = raw.strip()
+        if not ln or ln.startswith(("#", "-")):
+            continue
+        m = REQ_NAME_RE.match(ln)
+        if m:
+            out.append(m.group(1).lower().replace("-", "_").replace(".", "_"))
+    return out
+
+
+def unused_requirements(names: list[str], imports: set[str]) -> list[str]:
+    """声明了但没被 import 的包；考虑常见的包名 / 模块名不一致。"""
+    lowered = {i.lower() for i in imports}
+    return [n for n in names if n not in lowered and IMPORT_ALIASES.get(n, n) not in lowered]
+
+
+def nonatomic_write_hits(text: str) -> list[int]:
+    """直接覆盖写文件的行号（Rust 的 fs::write / File::create）。状态文件该用 临时文件 → fsync → rename。"""
+    return [i for i, ln in enumerate(text.splitlines(), 1) if NONATOMIC_WRITE_RE.search(ln)]
 
 
 def is_test_file(path: Path, text: str) -> bool:

@@ -17,7 +17,10 @@ from audit_source_checks import (
     STANDARD_NAME,
     Finding,
     exception_problems,
+    python_imports,
+    requirement_names,
     standard_version,
+    unused_requirements,
 )
 
 if TYPE_CHECKING:
@@ -308,6 +311,30 @@ def check_exceptions(a: Audit) -> None:
         a.add(Finding(severity, code, message, fix, "§17", "quality-budget.toml"))
 
 
+def check_python_unused_deps(a: Audit) -> None:
+    """requirements.txt 里声明了、源码里却没 import 的包（第 21 节：不为用不到的东西加依赖）。"""
+    req = a.read_text(a.root / "requirements.txt")
+    if req is None:
+        return
+    imports: set[str] = set()
+    for p, text in a._scannable_sources():
+        if p.suffix == ".py":
+            imports |= python_imports(text)
+    unused = unused_requirements(requirement_names(req), imports)
+    if unused:
+        shown = ", ".join(unused[:SHOW_AT_MOST])
+        a.add(
+            Finding(
+                "nit",
+                "N-PY-UNUSED-DEP",
+                f"requirements.txt 里 {len(unused)} 个包没被 import：{shown}",
+                "删掉没用的依赖；包名和模块名不一致的属误报，可忽略",
+                "§21",
+                "requirements.txt",
+            )
+        )
+
+
 CHECKS = (
     check_git,
     check_skeleton,
@@ -321,4 +348,5 @@ CHECKS = (
     check_other_locks,
     check_config,
     check_exceptions,
+    check_python_unused_deps,
 )

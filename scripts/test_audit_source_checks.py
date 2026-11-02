@@ -10,12 +10,16 @@ from pathlib import Path
 from audit_source_checks import (
     exception_problems,
     is_test_file,
+    nonatomic_write_hits,
+    python_imports,
+    requirement_names,
     secret_hits,
     shortcut_hits,
     sleep_hits,
     standard_version,
     suppression_hits,
     todo_states,
+    unused_requirements,
 )
 
 TODAY = dt.date(2026, 11, 2)
@@ -76,6 +80,21 @@ class ExceptionProblemsTest(unittest.TestCase):
         kinds = [k for k, _ in exception_problems(entries, TODAY)]
         self.assertEqual(["expired", "no_reason", "no_expiry"], kinds)
         self.assertEqual([], exception_problems(None, TODAY))
+
+
+class DependencyChecksTest(unittest.TestCase):
+    def test_imports_requirements_and_unused(self) -> None:
+        src = "import os\nimport numpy as np\nfrom yaml.loader import Loader\n"
+        self.assertEqual({"os", "numpy", "yaml"}, python_imports(src))
+        reqs = requirement_names("requests>=2\n# c\n-r base.txt\nNumPy==1.0\nPyYAML\nscikit-learn\n")
+        self.assertEqual(["requests", "numpy", "pyyaml", "scikit_learn"], reqs)
+        self.assertEqual(["requests", "scikit_learn"], unused_requirements(reqs, python_imports(src)))
+
+
+class NonatomicWriteTest(unittest.TestCase):
+    def test_flags_overwrite_calls_only(self) -> None:
+        text = "std::fs::write(path, data)?;\nlet f = File::create(p)?;\nfs::read(p);\n"
+        self.assertEqual([1, 2], nonatomic_write_hits(text))
 
 
 class IsTestFileTest(unittest.TestCase):

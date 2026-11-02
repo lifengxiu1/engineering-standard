@@ -48,7 +48,7 @@ description: 使用者所有软件项目的强制工程标准与工作流（高�
 
 1. 先跑 `python3 ~/.claude/skills/engineering-standard/scripts/audit_project.py <目录> --tier N` 拿结构性差距（N 按项目等级；省略时读 quality-budget.toml，再没有就按 2）。
 2. 再对照标准第 4–13 节和第 15–28 节看脚本查不到的：模块边界、错误处理、日志、测试层次、断电安全、并发、资源预算。每条给 文件:行号。
-3. 输出差距清单：严重度（blocker / should / nit）、条款号、位置、建议。这一步不动代码。
+3. 输出差距清单：严重度（blocker / should / nit）、条款号、位置、建议。这一步不动代码。清单最多 20 条：blocker 全列，should / nit 合并同类项；每条一两句，不展开成段落。
 4. 和用户确认优先级后，每个差距一个独立提交修复，按工作流 C 走。
 5. 审计结果存 `docs/metrics/YYYY-MM-DD-audit.md`，作为以后对比的基线。
 
@@ -69,7 +69,7 @@ description: 使用者所有软件项目的强制工程标准与工作流（高�
 读 `references/review-protocol.md`，按它的提示词和输出格式做。要点：
 - 先要齐四样输入：标准、diff、变更说明、测试输出。缺就要，不猜。
 - 机器已查的（格式、lint、测试）不讨论；先确认它们是绿的。
-- 每条发现：严重度、文件:行号、问题、违反条款、建议。不复述，不表扬，没有 blocker 就明说。
+- 每条发现：严重度、文件:行号、问题、违反条款、建议。问题一句、失败场景一句、建议一句，不展开成段落；超过 20 条合并同类项。不复述，不表扬，没有 blocker 就明说。
 - 在 Claude Code 里，作者会话之外用 `/code-review`（L 级改动用 `/code-review ultra`）作为独立审查者；或把 review-protocol.md 的提示词交给另一个模型。
 
 ## 工作流 E：发布
