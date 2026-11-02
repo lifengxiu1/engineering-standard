@@ -2,7 +2,7 @@ diff --git a/src/sensor.rs b/src/sensor.rs
 index 3b1f2c4..9d8e7a1 100644
 --- a/src/sensor.rs
 +++ b/src/sensor.rs
-@@ -10,6 +10,25 @@ pub struct Reading {
+@@ -10,6 +10,24 @@ pub struct Reading {
      pub temp_c: f32,
  }
  

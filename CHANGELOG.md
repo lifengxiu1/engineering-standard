@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+### Changed
+- 工作流 A：本机没有工具链时止步于骨架 + ADR + 预算 + README，空程序四件事留到有工具链的机器（评测发现有 skill 的运行在无 cargo 的机器上写了 566 行未编译代码）
+
+### Fixed
+- 评测夹具 change.diff 的 hunk 头行数（+25 → +24），现在能被 git apply 直接应用
+
 ## [1.3.0] - 2026-11-02
 
 ### Changed

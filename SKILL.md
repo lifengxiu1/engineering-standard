@@ -39,7 +39,7 @@ description: 使用者所有软件项目的强制工程标准与工作流（高�
 1. 从上下文确定运行环境（MCU / Linux 单板 / 服务器 / 脚本）、硬件约束、已有语言。按标准第 2 节的表选语言，理由写进 ADR-0001。信息不够就问；用户不在线就按表选并在汇报里写明假设。
 2. 跑 `bash ~/.claude/skills/engineering-standard/scripts/bootstrap_project.sh <目录>`。它复制骨架、放入标准副本和 `audit_project.py`、建 `AGENTS.md -> CLAUDE.md`、需要时 `git init`。
 3. 填 `docs/adr/0001-language.md`、`quality-budget.toml`（含 `[project] tier`，其余见 quality-gates.md）、`CLAUDE.md` 的项目段、`README.md` 四件事。
-4. 让 `scripts/ci.sh` 在空项目上跑绿；让空程序能启动、打日志、`--version`、`--health`、优雅退出。
+4. 让 `scripts/ci.sh` 在空项目上跑绿；让空程序能启动、打日志、`--version`、`--health`、优雅退出。**这一步和第 5 步需要工具链**（cargo、ruff 之类）。本机没有的话，止步于第 3 步，写明"第 4、5 步等有工具链的机器做"，不要在编译不了的机器上写几百行没验证过的代码（第 29 节：验证后再说完成；评测里有 skill 的运行曾这样花了 35 分钟）。
 5. 填 build / deploy / rollback / smoke 四个脚本，在目标设备上部署一次 Hello 版本并实际回滚一次。
 6. 跑 `python3 scripts/audit_project.py .`，blocker 清零。
 7. 以上全部完成后才写第一个功能。顺序就是标准附录 B；跳步会在后面加倍还债。
