@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# 提交门禁：提交前跑 scripts/ci.sh，不绿不让提交（标准第 9、17 节：机器能检查的不靠人）。
+# 安装：scripts/install-hooks.sh（每个克隆一次）。绕过只能改规则，不能 --no-verify。
+# 太慢的检查不要留在这里，挪到 CI（第 17 节：慢检查放在编辑循环之外）。
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+if [ ! -x scripts/ci.sh ]; then
+  echo "pre-commit: 没有 scripts/ci.sh，跳过门禁" >&2
+  exit 0
+fi
+echo "pre-commit: 运行 scripts/ci.sh，不绿不提交" >&2
+scripts/ci.sh

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import os
 import re
+import subprocess
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -335,6 +336,28 @@ def check_python_unused_deps(a: Audit) -> None:
         )
 
 
+def check_commit_gate(a: Audit) -> None:
+    """有 .githooks/pre-commit 却没装（core.hooksPath 未指向它）：门禁等于没有（第 9 节）。"""
+    if a.tier < 1 or not (a.root / ".githooks" / "pre-commit").is_file() or not (a.root / ".git").exists():
+        return
+    cmd = ["git", "-C", str(a.root), "config", "--get", "core.hooksPath"]
+    try:
+        hooks_path = subprocess.run(cmd, capture_output=True, text=True, check=False).stdout.strip()
+    except FileNotFoundError:
+        return
+    if hooks_path != ".githooks":
+        a.add(
+            Finding(
+                "should",
+                "S-HOOKS-NOT-INSTALLED",
+                "有 .githooks/pre-commit 但没安装，提交不会跑检查",
+                "scripts/install-hooks.sh（每个克隆一次）",
+                "§9",
+                ".githooks/pre-commit",
+            )
+        )
+
+
 CHECKS = (
     check_git,
     check_skeleton,
@@ -349,4 +372,5 @@ CHECKS = (
     check_config,
     check_exceptions,
     check_python_unused_deps,
+    check_commit_gate,
 )

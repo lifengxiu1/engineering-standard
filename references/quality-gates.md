@@ -95,6 +95,10 @@ strict = true
 - 至少保留一条外部检查（cargo audit / pip-audit / semgrep 这类不是项目自己写的检查）。
 - 审查时盯五种绕过：阈值被移动、测试被弄简单、检查器被静音、工作没做完、凭空出现的例外。审计脚本会列出抑制标记（`#[allow]`、`# noqa`、`eslint-disable` 等）和被跳过的测试，供审查对照。
 
+## 提交门禁
+
+`.githooks/pre-commit` 在每次提交前跑 `scripts/ci.sh`，不绿不提交；克隆后跑一次 `scripts/install-hooks.sh`（设置 `core.hooksPath`）。骨架模板自带，`bootstrap_project.sh` 会自动安装。太慢的步骤挪到 CI，不要关门禁。
+
 ## 用 hook 自动执行（可选）
 
 确定性的规则放进 Claude Code 的 hook，比提示词里写"永远记得格式化"可靠。项目的 `.claude/settings.json` 示例：

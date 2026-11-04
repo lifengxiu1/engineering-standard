@@ -91,6 +91,7 @@ SKELETON = [
     ("scripts/rollback.sh", 2, "should", "§12", "一条命令回滚"),
     ("scripts/smoke.sh", 2, "should", "§8、§18", "真机冒烟，含资源预算检查"),
     ("scripts/audit_project.py", 1, "nit", "§3", "从 skill 复制全部四个 audit_*.py，让 ci.sh 能跑标准审计"),
+    (".githooks/pre-commit", 1, "nit", "§9", "提交门禁：从 skill 模板复制 .githooks/ 和 scripts/install-hooks.sh"),
 ]
 
 

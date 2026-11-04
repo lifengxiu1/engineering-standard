@@ -9,6 +9,7 @@
 - 全部检查：`scripts/ci.sh`（shell 语法、单元测试、骨架自测、标准自审）
 - 单元测试：`python3 -m unittest discover -s scripts -p 'test_*.py'`
 - 标准自审：`python3 scripts/audit_project.py .`
+- 提交门禁（克隆后跑一次）：`scripts/install-hooks.sh`，之后每次提交自动跑 ci.sh，不绿不提交
 
 ## 本仓库特有规则
 - 改标准正文（references/ENGINEERING_STANDARD.md）要同时：版本号 +0.1、CHANGELOG 加一条、SKILL.md 文件地图里的行数提示；新增条款要在 sources-review.md 写来源。

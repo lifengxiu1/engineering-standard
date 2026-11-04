@@ -4,7 +4,10 @@
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-11-03
+
 ### Added
+- 提交门禁：`.githooks/pre-commit` 提交前跑 `scripts/ci.sh`，`scripts/install-hooks.sh` 安装；骨架模板自带，bootstrap 自动安装；审计报“有钩子没安装”；标准第 9 节写入条款（版本 1.4）
 - 审计新增两项 nit：requirements.txt 里声明了却没 import 的包（§21）、Rust 里直接覆盖写文件的调用台账（§19）
 
 ### Changed

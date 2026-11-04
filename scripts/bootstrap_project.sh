@@ -45,6 +45,10 @@ if [ ! -d "$TARGET/.git" ]; then
   git -C "$TARGET" init -q -b main 2>/dev/null || git -C "$TARGET" init -q
   echo "已 git init（$TARGET）"
 fi
+# 6. 提交门禁：提交前自动跑 scripts/ci.sh
+if [ -x "$TARGET/scripts/install-hooks.sh" ]; then
+  (cd "$TARGET" && bash scripts/install-hooks.sh)
+fi
 
 # 报告
 echo "新建 ${#copied[@]} 个文件："

@@ -12,6 +12,7 @@
 - 部署 / 回滚：`DEVICE=<主机> APP=<程序名> scripts/deploy.sh` / `scripts/rollback.sh`
 - 真机冒烟：`scripts/smoke.sh`
 - 标准审计：`python3 scripts/audit_project.py .`
+- 提交门禁（克隆后跑一次）：`scripts/install-hooks.sh`，之后每次提交自动跑 ci.sh
 
 ## 本项目特有规则
 <例如：设备上禁止编译；日志不写扩展卡；某个总线只有一个写者；安全状态是什么。>

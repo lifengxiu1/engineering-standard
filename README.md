@@ -29,7 +29,7 @@ git clone https://github.com/lifengxiu1/engineering-standard.git ~/.claude/skill
 
 其他代理（Codex、Cursor、Copilot 等）：把 `references/ENGINEERING_STANDARD.md` 复制到项目根目录，在项目的 `AGENTS.md` 或 `CLAUDE.md` 第一行写 `@ENGINEERING_STANDARD.md`。`scripts/bootstrap_project.sh <目录>` 会把这些和整套骨架一起放好。
 
-需要 Python 3.11+（审计脚本用标准库 `tomllib`）和 bash。
+需要 Python 3.11+（审计脚本用标准库 `tomllib`）和 bash。克隆本仓库后跑一次 `scripts/install-hooks.sh`，之后每次提交会自动跑检查。
 
 ## 用法
 

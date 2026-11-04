@@ -13,7 +13,7 @@ description: 使用者所有软件项目的强制工程标准与工作流（高�
 
 | 文件 | 什么时候读 |
 |---|---|
-| `references/ENGINEERING_STANDARD.md` | 完整标准 v1.3（约 550 行，顶部有目录）。按需读相关章节，不必每次通读：`grep -n '^## ' references/ENGINEERING_STANDARD.md` 找行号，`sed -n 'A,Bp'` 读某一节 |
+| `references/ENGINEERING_STANDARD.md` | 完整标准 v1.4（约 550 行，顶部有目录）。按需读相关章节，不必每次通读：`grep -n '^## ' references/ENGINEERING_STANDARD.md` 找行号，`sed -n 'A,Bp'` 读某一节 |
 | `references/review-protocol.md` | 做审查或请求审查时 |
 | `references/quality-gates.md` | 填 `quality-budget.toml`、配 lint 阈值、覆盖率、变异测试、资源预算测量、例外与 hook 时 |
 | `references/sources-review.md` | 想知道某条规则从哪来、为什么取或弃了某个外部 skill 时 |
@@ -37,7 +37,7 @@ description: 使用者所有软件项目的强制工程标准与工作流（高�
 ## 工作流 A：新项目
 
 1. 从上下文确定运行环境（MCU / Linux 单板 / 服务器 / 脚本）、硬件约束、已有语言。按标准第 2 节的表选语言，理由写进 ADR-0001。信息不够就问；用户不在线就按表选并在汇报里写明假设。
-2. 跑 `bash ~/.claude/skills/engineering-standard/scripts/bootstrap_project.sh <目录>`。它复制骨架、放入标准副本和 `audit_project.py`、建 `AGENTS.md -> CLAUDE.md`、需要时 `git init`。
+2. 跑 `bash ~/.claude/skills/engineering-standard/scripts/bootstrap_project.sh <目录>`。它复制骨架、放入标准副本和 `audit_project.py`、建 `AGENTS.md -> CLAUDE.md`、需要时 `git init`，并安装提交门禁（提交前自动跑 `scripts/ci.sh`）。
 3. 填 `docs/adr/0001-language.md`、`quality-budget.toml`（含 `[project] tier`，其余见 quality-gates.md）、`CLAUDE.md` 的项目段、`README.md` 四件事。
 4. 让 `scripts/ci.sh` 在空项目上跑绿；让空程序能启动、打日志、`--version`、`--health`、优雅退出。**这一步和第 5 步需要工具链**（cargo、ruff 之类）。本机没有的话，止步于第 3 步，写明"第 4、5 步等有工具链的机器做"，不要在编译不了的机器上写几百行没验证过的代码（第 29 节：验证后再说完成；评测里有 skill 的运行曾这样花了 35 分钟）。
 5. 填 build / deploy / rollback / smoke 四个脚本，在目标设备上部署一次 Hello 版本并实际回滚一次。

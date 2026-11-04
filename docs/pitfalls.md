@@ -8,6 +8,7 @@
 | 2026-11-02 | 审计脚本 523 行，超过自己定的 500 行门槛 | 新检查都堆进一个文件 | 纯函数拆到 audit_source_checks.py 并配测试 | 是（ci.sh 跑标准自审，S-FILE-LONG 会报） |
 | 2026-11-02 | 仓库自审把 evals 夹具里的测试密码报成 blocker | 夹具目录被当成源码扫描 | quality-budget.toml 加 `[audit] skip_paths` | 是 |
 | 2026-11-02 | 手写压到 500 行的脚本，`ruff format` 后 766 行 | 行数按格式化前算的 | 先格式化再数；检查拆成按职责分的模块 | 是（ci.sh 先 ruff format --check 再自审） |
+| 2026-11-03 | 验证脚本没开 set -e，前一步失败后后面的相对路径都跑在错误目录里，结果在本仓库里误提交了两次（含一个测试用的假密码文件）；未推送，已 reset 撤销 | 多步脚本不 fail-fast、用相对路径、测试里 git commit 没限定目录 | 验证脚本一律 `set -euo pipefail` + 绝对路径 + `git -C <目录>`；commit 之前先断言 HEAD 和目录 | 否（人工约定） |
 | 2026-11-02 | 一次提交在 ci.sh 变红的情况下照样 commit 并 push 到 main（脚本把检查和提交串在一起却没有用 && 门控） | 提交命令没有以检查通过为前提 | 提交永远写成 `ci.sh && git commit`；根治是 pre-commit hook 跑 ci.sh | 否（待加 scripts/install-hooks.sh） |
 | 2026-11-02 | 模板 ci.sh 注释里的“TODO”一词被审计正则报成无日期 TODO，每个新项目一建就带一条 should | 正则只看单词不看写法 | 正则要求 TODO 后跟冒号或括号；模板注释改词；第二轮评测的代理发现的 | 是（单元测试加了反例） |
 | 2026-11-02 | 文件长度检查对以换行结尾的文件多算 1 行 | `count("\n") + 1` | 改用 `len(splitlines())`；对自己跑一遍就发现了 | 是 |
